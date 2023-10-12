@@ -24,6 +24,7 @@ public class ProductResponse {
 
     private Integer price;
     private Integer shopId;
+    private ShopResponse shopResponse;
 
 
 }

@@ -6,11 +6,13 @@ import com.productService.productServiceAdd.tdo.ProductRequest;
 import com.productService.productServiceAdd.tdo.ProductResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductService  {
 
 
-    public ProductResponse createNewProduct(ProductRequest productRequest);
+    String createNewProduct(ProductRequest productRequest);
 
-    public List<Products> findAllProducts();
+    List<Products> findAllProducts();
+    ProductResponse findProductById(int id,int shopId);
 }

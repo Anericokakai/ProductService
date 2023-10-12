@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 
@@ -37,16 +38,34 @@ public class ProductController {
 
         }
 
-     ProductResponse response=    productService.createNewProduct(productRequest);
+     String response=    productService.createNewProduct(productRequest);
          return ResponseEntity.status(201).body(
                  response
          );
     }
 
+//    ! FIND ALL PRODUCTS
+
     @GetMapping("/all")
     public ResponseEntity<?> findAllProducts() {
         List<Products> allProducts= productService.findAllProducts();
         return ResponseEntity.status(200).body(allProducts);
+    }
+
+//    FIND BY ID
+    @GetMapping("/{productId}/{shopId}")
+    public ResponseEntity<?> findProductById(@PathVariable("productId") int id,
+    @PathVariable("shopId" )int shopId){
+
+       try {
+           ProductResponse response= productService.findProductById(id,shopId);
+
+         return  ResponseEntity.status(200).body(response);
+       }catch (NoSuchElementException ex){
+         return  ResponseEntity.status(401).body("cannot find a product of the given id");
+
+       }
+
     }
 
 
