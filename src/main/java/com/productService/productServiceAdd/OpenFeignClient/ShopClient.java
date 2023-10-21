@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 public interface ShopClient {
     @GetMapping("/{storeNumber}")
-    ShopResponse FindShopById(@PathVariable("storeNumber") String storeNumber);
+    ShopResponse FindShopByStoreNumber(@PathVariable("storeNumber") String storeNumber);
+
 
 
 

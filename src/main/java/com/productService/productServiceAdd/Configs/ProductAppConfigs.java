@@ -12,8 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class ProductAppConfigs {
 
-    @Value("${shopsservice.base.url}")
-    private String adressBaseURL;
+
 
     @Bean
     public ModelMapper modelMapper(){
@@ -21,19 +20,9 @@ public class ProductAppConfigs {
     }
 
 
-@LoadBalanced
-    @Bean
-    public RestTemplate restTemplate(){
-        return new RestTemplate();
 
-    }
-@Bean
-public WebClient webClient(){
-        return WebClient
-                .builder()
-                .baseUrl(adressBaseURL)
-                .build();
-}
+
+
 
 }
 

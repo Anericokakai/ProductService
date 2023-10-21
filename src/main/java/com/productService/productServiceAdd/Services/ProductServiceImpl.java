@@ -1,22 +1,15 @@
 package com.productService.productServiceAdd.Services;
-
+import com.productService.productServiceAdd.Ecxeption.NotFoundException;
 import com.productService.productServiceAdd.OpenFeignClient.ShopClient;
 import com.productService.productServiceAdd.Repository.ProductRepository;
 import com.productService.productServiceAdd.models.Products;
 import com.productService.productServiceAdd.tdo.ProductRequest;
 import com.productService.productServiceAdd.tdo.ProductResponse;
 import com.productService.productServiceAdd.tdo.ShopResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,88 +19,61 @@ import java.util.Map;
 @Service
 
 public class ProductServiceImpl  implements ProductService{
-
 private final ProductRepository productRepository;
-
-private final RestTemplate restTemplate;
-
 private final ModelMapper modelMapper;
-//@Value("${shopsservice.base.url}")
-//private String adressBaseURL;
 
+private  final ShopClient shopClient;
 
-    private  final WebClient webClient;
-    @Autowired
-    private  final ShopClient shopClient;
-
-    private  final LoadBalancerClient loadBalancerClient;
-
-//private  final DiscoveryClient discoveryClient;
 
     @Override
     public String createNewProduct(ProductRequest productRequest) {
         Products newProduct= modelMapper.map(productRequest,Products.class);
-
-
+shopClient.FindShopByStoreNumber(productRequest.getStoreNumber());
         productRepository.save(newProduct);
-
         return "product was added Successfully";
     }
 
+
+//    ! FIND PRODUCT BY ID AND ITS SHOP DATA
+
     @Override
-    public List<Products> findAllProducts() {
+    public List<Products> findAllProducts() throws NotFoundException {
+        List<Products> productList =productRepository.findAll();
+
+        if(productList.isEmpty()){
+            throw new NotFoundException("no products are available !");
+        }
         return productRepository.findAll();
     }
 
     @Override
     public ProductResponse findProductById(int id) {
 
-
+if(productRepository.findById(id).isEmpty()){
+    throw new EntityNotFoundException("product with the given id:"+id+" cannot  be found!");
+}
         Products products= productRepository.findById(id).get();
         ProductResponse productResponse=modelMapper.map(products,ProductResponse.class);
-
-//        ! USING THE WEBCLIENT
-//
-//        ShopResponse shopResponse=webClient
-//                .get()
-//                .uri("/shops/"+shopId)
-//                .retrieve()
-//                .bodyToMono(ShopResponse.class)
-//                .block();
-//        productResponse.setShopResponse(shopResponse);
-
-//! USING REST TEMPLATE
-
-//        List<ServiceInstance> instances= discoveryClient.getInstances("shop-service");
-//
-//        ServiceInstance serviceInstance= instances.get(0);
-//
-
-
-    ServiceInstance serviceInstance=    loadBalancerClient.choose("shop-service");
-          String uri= serviceInstance.getUri().toString();
-          String contextPath=serviceInstance.getMetadata().get("configPath");
-        System.out.println("URLSerivce : "+uri);
-        System.out.println("URLContextPath : "+contextPath);
-
-//   ShopResponse  shopResponse=restTemplate.getForObject(uri+contextPath+"/{shopId}", ShopResponse.class,shopId);
-//        productResponse.setShopResponse(shopResponse);
-
-//        ShopResponse  shopResponse=restTemplate.getForObject("http://SHOP-SERVICE"+contextPath+"/{shopId}", ShopResponse.class,shopId);
-//        productResponse.setShopResponse(shopResponse);
 
 //        ! USING OPEN FEIGN
 
 
-        ShopResponse shopResponse=shopClient.FindShopById(products.getStoreNumber());
+        ShopResponse shopResponse=shopClient.FindShopByStoreNumber(products.getStoreNumber());
         productResponse.setShopResponse(shopResponse);
 
 
         return  productResponse;
     }
 
+
+//    ! DELETE PRODUCTS
     @Override
     public Map<String, String> deleteAllProducts(String storeNumber) {
+
+        List<Products> productList=productRepository.findByStoreNumber(storeNumber);
+if(productList.isEmpty()){
+    throw  new EntityNotFoundException("product with the given id: "+storeNumber+" cannot be found ");
+}
 
 
    productRepository.deleteAllByStoreNumber(storeNumber);
@@ -117,6 +83,5 @@ private final ModelMapper modelMapper;
   message.put("productMessage","products deleted succesfully");
         return message;
     }
-
 
 }

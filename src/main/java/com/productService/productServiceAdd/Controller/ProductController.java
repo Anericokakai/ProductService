@@ -1,10 +1,12 @@
 package com.productService.productServiceAdd.Controller;
 
 
+import com.productService.productServiceAdd.Ecxeption.NotFoundException;
 import com.productService.productServiceAdd.Services.ProductService;
 import com.productService.productServiceAdd.models.Products;
 import com.productService.productServiceAdd.tdo.ProductRequest;
 import com.productService.productServiceAdd.tdo.ProductResponse;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,28 +41,23 @@ public class ProductController {
 //    ! FIND ALL PRODUCTS
 
     @GetMapping("/all")
-    public ResponseEntity<?> findAllProducts() {
+    public ResponseEntity<?> findAllProducts() throws NotFoundException {
         List<Products> allProducts= productService.findAllProducts();
         return ResponseEntity.status(200).body(allProducts);
     }
 
 //    FIND BY ID
     @GetMapping("/{productId}")
-    public ResponseEntity<?> findProductById(@PathVariable("productId") int id){
+    public ResponseEntity<?> findProductById(@PathVariable("productId") int id) throws  EntityNotFoundException{
 
-       try {
            ProductResponse response= productService.findProductById(id);
 
          return  ResponseEntity.status(200).body(response);
-       }catch (NoSuchElementException ex){
-         return  ResponseEntity.status(401).body("cannot find a product of the given id");
-
-       }
 
     }
 
     @DeleteMapping("/delete/all/{storeNumber}")
-    Map<String ,String > deleteAllProductUnderShop(@PathVariable("storeNumber") String  storeNumber){
+    Map<String ,String > deleteAllProductUnderShop(@PathVariable("storeNumber") String  storeNumber) throws EntityNotFoundException {
         Map<String ,String > message=productService.deleteAllProducts(storeNumber);
         return ResponseEntity.status(HttpStatus.CREATED).body(message).getBody();
     }
