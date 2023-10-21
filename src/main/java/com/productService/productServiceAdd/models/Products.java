@@ -2,13 +2,10 @@ package com.productService.productServiceAdd.models;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigInteger;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -19,17 +16,20 @@ public class Products {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productid")
+    @Column(name = "product_id")
     private int id;
-    @Column(name = "productname")
+    @Column(name = "product_name")
 
     private String productName;
     @Column(name = "product_desc")
 
     private String productDesc;
 
-    private Integer price;
+    @Column(name = "price")
 
-    private int shopid ;
+    private Integer price;
+    @Column(name = "store_number")
+
+    private String storeNumber ;
 
 }

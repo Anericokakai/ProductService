@@ -1,5 +1,6 @@
 package com.productService.productServiceAdd.Services;
 
+import com.productService.productServiceAdd.OpenFeignClient.ShopClient;
 import com.productService.productServiceAdd.Repository.ProductRepository;
 import com.productService.productServiceAdd.models.Products;
 import com.productService.productServiceAdd.tdo.ProductRequest;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -34,6 +37,8 @@ private final ModelMapper modelMapper;
 
 
     private  final WebClient webClient;
+    @Autowired
+    private  final ShopClient shopClient;
 
     private  final LoadBalancerClient loadBalancerClient;
 
@@ -55,7 +60,7 @@ private final ModelMapper modelMapper;
     }
 
     @Override
-    public ProductResponse findProductById(int id,int shopId) {
+    public ProductResponse findProductById(int id) {
 
 
         Products products= productRepository.findById(id).get();
@@ -88,8 +93,30 @@ private final ModelMapper modelMapper;
 //   ShopResponse  shopResponse=restTemplate.getForObject(uri+contextPath+"/{shopId}", ShopResponse.class,shopId);
 //        productResponse.setShopResponse(shopResponse);
 
-        ShopResponse  shopResponse=restTemplate.getForObject("http://SHOP-SERVICE"+contextPath+"/{shopId}", ShopResponse.class,shopId);
+//        ShopResponse  shopResponse=restTemplate.getForObject("http://SHOP-SERVICE"+contextPath+"/{shopId}", ShopResponse.class,shopId);
+//        productResponse.setShopResponse(shopResponse);
+
+//        ! USING OPEN FEIGN
+
+
+        ShopResponse shopResponse=shopClient.FindShopById(products.getStoreNumber());
         productResponse.setShopResponse(shopResponse);
+
+
         return  productResponse;
     }
+
+    @Override
+    public Map<String, String> deleteAllProducts(String storeNumber) {
+
+
+   productRepository.deleteAllByStoreNumber(storeNumber);
+
+    Map<String,String> message=new HashMap<>();
+
+  message.put("productMessage","products deleted succesfully");
+        return message;
+    }
+
+
 }

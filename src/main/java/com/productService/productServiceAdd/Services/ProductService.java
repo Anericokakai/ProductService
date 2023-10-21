@@ -6,6 +6,7 @@ import com.productService.productServiceAdd.tdo.ProductRequest;
 import com.productService.productServiceAdd.tdo.ProductResponse;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ProductService  {
@@ -14,5 +15,6 @@ public interface ProductService  {
     String createNewProduct(ProductRequest productRequest);
 
     List<Products> findAllProducts();
-    ProductResponse findProductById(int id,int shopId);
+    ProductResponse findProductById(int id);
+    Map<String,String> deleteAllProducts(String storeNumber);
 }

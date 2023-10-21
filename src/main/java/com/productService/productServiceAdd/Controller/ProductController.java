@@ -8,6 +8,7 @@ import com.productService.productServiceAdd.tdo.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -28,16 +29,7 @@ public class ProductController {
 
 //    ! CREATE A NEW PRODUCT
     @PostMapping("/new")
-    public ResponseEntity<?> createNewProduct(@RequestBody @Valid ProductRequest productRequest,BindingResult bindingResult){
-
-//        if there are errors
-        if (productRequest.getProductDesc().isEmpty()||productRequest.getProductName().isEmpty()||productRequest.getPrice()==null||productRequest.getShopId()==null) {
-            HashMap<String,String> error= new HashMap<>();
-            error.put("errorMessage","all fields are requires");
-            return ResponseEntity.badRequest().body(error);
-
-        }
-
+    public ResponseEntity<?> createNewProduct(@RequestBody @Valid ProductRequest productRequest)  {
      String response=    productService.createNewProduct(productRequest);
          return ResponseEntity.status(201).body(
                  response
@@ -53,12 +45,11 @@ public class ProductController {
     }
 
 //    FIND BY ID
-    @GetMapping("/{productId}/{shopId}")
-    public ResponseEntity<?> findProductById(@PathVariable("productId") int id,
-    @PathVariable("shopId" )int shopId){
+    @GetMapping("/{productId}")
+    public ResponseEntity<?> findProductById(@PathVariable("productId") int id){
 
        try {
-           ProductResponse response= productService.findProductById(id,shopId);
+           ProductResponse response= productService.findProductById(id);
 
          return  ResponseEntity.status(200).body(response);
        }catch (NoSuchElementException ex){
@@ -66,6 +57,12 @@ public class ProductController {
 
        }
 
+    }
+
+    @DeleteMapping("/delete/all/{storeNumber}")
+    Map<String ,String > deleteAllProductUnderShop(@PathVariable("storeNumber") String  storeNumber){
+        Map<String ,String > message=productService.deleteAllProducts(storeNumber);
+        return ResponseEntity.status(HttpStatus.CREATED).body(message).getBody();
     }
 
 

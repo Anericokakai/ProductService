@@ -23,7 +23,7 @@ public class ProductResponse {
     private String productDesc;
 
     private Integer price;
-    private Integer shopId;
+    private String storeNumber;
     private ShopResponse shopResponse;
 
 

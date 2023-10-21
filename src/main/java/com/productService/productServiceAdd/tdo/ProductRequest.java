@@ -19,6 +19,8 @@ public class ProductRequest {
     private String productName;
     @NotBlank(message = "the product description  field can not be blank")
     private String productDesc;
+
     private Integer price;
-    private Integer shopId;
+    @NotBlank(message = "store number must be a valid store number and not blank")
+    private String storeNumber;
 }
