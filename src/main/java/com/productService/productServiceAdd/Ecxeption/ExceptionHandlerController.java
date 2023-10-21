@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +55,25 @@ return errMap;
         return response.substring(response.indexOf("\"errorMessage\":\"") + 16, response.indexOf("\"}"));
     }
 
+//    ! unavailable service in feign client
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(FeignException.ServiceUnavailable.class)
+    public  Map<String ,String > unavailableService(FeignException ex){
+        Map<String ,String > errorMap=new HashMap<>();
+
+        errorMap.put("errorMessage",ex.contentUTF8());
+        return  errorMap;
+    }
+
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(ConnectException.class)
+    public Map<String,String > connectionResfude(ConnectException ex){
+        Map<String,String > erroMap= new HashMap<>();
+        erroMap.put("errorMessage",ex.getMessage());
+        return erroMap;
+    }
 
 //    custom exception for no products
     @ResponseStatus(HttpStatus.NOT_FOUND)
