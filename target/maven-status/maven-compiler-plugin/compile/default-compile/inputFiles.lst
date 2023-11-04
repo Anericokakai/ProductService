@@ -1,0 +1,13 @@
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/Services/ProductServiceImpl.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/tdo/ProductRequest.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/ProductServiceAddApplication.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/Repository/ProductRepository.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/tdo/ShopResponse.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/Controller/ProductController.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/Services/ProductService.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/models/Products.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/tdo/ProductResponse.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/Ecxeption/NotFoundException.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/Ecxeption/ExceptionHandlerController.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/Configs/ProductAppConfigs.java
+/home/rico/projects/springProjects/ProductService/src/main/java/com/productService/productServiceAdd/OpenFeignClient/ShopClient.java
