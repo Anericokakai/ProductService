@@ -6,23 +6,22 @@ import com.productService.productServiceAdd.Services.ProductService;
 import com.productService.productServiceAdd.models.Products;
 import com.productService.productServiceAdd.tdo.ProductRequest;
 import com.productService.productServiceAdd.tdo.ProductResponse;
+
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
+
 
 @RestController
-
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -31,12 +30,15 @@ public class ProductController {
 
 //    ! CREATE A NEW PRODUCT
     @PostMapping("/new")
+
+
     public ResponseEntity<?> createNewProduct(@RequestBody @Valid ProductRequest productRequest)  {
      String response=    productService.createNewProduct(productRequest);
          return ResponseEntity.status(201).body(
                  response
          );
     }
+
 
 //    ! FIND ALL PRODUCTS
 
